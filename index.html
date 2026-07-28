@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ຄຳນວນອາກອນ ແລະ ປະກັນສັງຄົມໃນ 2 ຂັ້ນຕອນ</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Phetsarath OT', 'Kanit', sans-serif, system-ui; }
+        body { background-color: #f4f6f9; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .container { background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 480px; }
+        h2 { text-align: center; color: #2c3e50; margin-top: 0; font-size: 20px; }
+        .badge-step { background: #eef2f7; color: #0056b3; font-size: 13px; font-weight: bold; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; font-size: 14px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #004085; }
+        .btn-secondary { background-color: #6c757d; margin-top: 5px; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .result-box { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .result-item.highlight { font-weight: bold; font-size: 16px; color: #28a745; border-top: 2px solid #28a745; padding-top: 10px; margin-top: 10px; }
+        .alert-info { background-color: #e3f2fd; color: #0d47a1; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border-left: 4px solid #1e88e5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ຄຳນວນອາກອນ ແລະ ປະກັນສັງຄົມ</h2>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+        <span class="badge-step">ຂັ້ນຕອນທີ 1/2: ລະບຸເງິນເດືອນພື້ນຖານ</span>
+        <div class="form-group">
+            <label>ເງິນເດືອນພື້ນຖານເດືອນນີ້:</label>
+            <input type="number" id="baseSalary" placeholder="ຕົວຢ່າງ 2,500,000" min="0">
+        </div>
+        <button onclick="goToStep2()">ຖັດໄປ (ຂັ້ນຕອນທີ 2)</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" style="display: none;">
+        <span class="badge-step">ຂັ້ນທີ 2/2: ຂໍ້ມູນລາຍຮັບຕ່າງໆ</span>
+        
+        <div id="step2Info" class="alert-info"></div>
+
+        <div class="form-group">
+            <label>1. ລາຍຮັບທັງໝົດ (ເງິນເດືອນພື້ນຖານ + OT + ສະຫວັດດິການອື່ນໆ):</label>
+            <input type="number" id="totalIncome" placeholder="ຕົວຢ່າງ 3,500,000" min="0">
+        </div>
+
+        <!-- แสดงเฉพาะกรณีเงินเดือน ≤ 3 ล้านกีบ -->
+        <div class="form-group" id="groupOt">
+            <label>2. ເງິນລ່ວງເວລາ OT ເດືອນນີ້:</label>
+            <input type="number" id="otIncome" placeholder="ຕົວຢ່າງ 500,000" value="0" min="0">
+        </div>
+
+        <div class="form-group">
+            <label id="lblExemptOther">3. ລາຍຮັບອື່ນໆທີ່ຖືກຍົກເວັ້ນອາກອນ (ຖ້າມີ):</label>
+            <input type="number" id="otherExemptIncome" placeholder="ຕົວຢ່າງ 250,000" value="0" min="0">
+        </div>
+
+        <button onclick="calculateTax()">ຄຳນວນອາກອນ ແລະ ປະກັນສັງຄົມ</button>
+        <button class="btn-secondary" onclick="backToStep1()">ກັບຄືນ</button>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-box" id="result" style="display: none;">
+        <div class="result-item">
+            <span>ລາຍຮັບທັງໝົດ:</span>
+            <span><strong id="resTotalIncome">0</strong> ກີບ</span>
+        </div>
+        <div class="result-item" style="color: #d9534f;">
+            <span>ຫັກປະກັນສັງຄົມ (5.5% ຈາກຖານເງິນເດືອນ):</span>
+            <span><strong id="resSso">0</strong> ກີບ</span>
+        </div>
+        <div class="result-item" style="color: #6c757d;">
+            <span>ຮາຍຮັບທີ່ຖືກຍົກເວັ້ນອາກອນ:</span>
+            <span><strong id="resTotalExempt">0</strong> ກີບ</span>
+        </div>
+        <div class="result-item">
+            <span>ຈຳນວນລາຍຮັບທີ່ນຳມາຄຳນວນ:</span>
+            <span><strong id="resTaxableBase">0</strong> ກີບ</span>
+        </div>
+        <div class="result-item" style="color: #d9534f; margin-top: 6px;">
+            <span>ມູນຄ່າອາກອນທີ່ຕ້ອງຈ່າຍ:</span>
+            <span><strong id="resTax">0</strong> ກີບ</span>
+        </div>
+        <div class="result-item highlight">
+            <span>ລາຍຮັບສຸດທິ (ລາຍຮັບຕົວຈິງ):</span>
+            <span><strong id="resNet">0</strong> ກີບ</span>
+        </div>
+    </div>
+</div>
+
+<script>
+let baseSalaryVal = 0;
+
+function goToStep2() {
+    baseSalaryVal = parseFloat(document.getElementById('baseSalary').value) || 0;
+
+    if (baseSalaryVal <= 0) {
+        alert("ກາລຸນາໃສ່ເງິນເດືອນພື້ນຖານໃຫ້ຖືກຕ້ອງ");
+        return;
+    }
+
+    const groupOt = document.getElementById('groupOt');
+    const step2Info = document.getElementById('step2Info');
+    const lblExemptOther = document.getElementById('lblExemptOther');
+
+    if (baseSalaryVal <= 3000000) {
+        // ແບບທີ 1: ເງິນເດືອນພື້ນຖານບໍ່ເກີນ 3 ລ້ານກີບ -> ເງິນລ່ວງເວລາ (OT) ໄດ້ຮັບຍົກເວັ້ນອາກອນ
+        groupOt.style.display = 'block';
+        lblExemptOther.innerText = '3. ລາຍຮັບອື່ນໆທີ່ຖືກຍົກເວັ້ນອາກອນ (ຖ້າມີ):';
+        step2Info.innerText = "ເງິນເດືອນພື້ນຖານບໍ່ເກີນ 3,000,000 ກິບ: ເງິນລ່ວງເວລາ (OT) ໄດ້ຮັບຍົກເວັ້ນອາກອນ";
+    } else {
+        // ແບບທີ 2: ເງິນເດືອນພື້ນຖານຫຼາຍກວ່າ 3 ລ້ານກີບ -> ເງິນລ່ວງເວລາ (OT) ຄຳນວນອາກອນປົກກະຕິ (ເຊື່ອງຊ່ອງ OT)
+        groupOt.style.display = 'none';
+        document.getElementById('otIncome').value = 0;
+        lblExemptOther.innerText = '2. ລາຍຮັບອື່ນໆທີ່ຖືກຍົກເວັ້ນອາກອນ (ຖ້າມີ):';
+        step2Info.innerText = "ເງິນເດືອນພື້ນຖານຫຼາຍກວ່າ 3,000,000 ກີບ: ເງິນລ່ວງເວລາ (OT) ຖືກຄຳນວນອາກອນປົກກະຕິ";
+    }
+
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+}
+
+function backToStep1() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+}
+
+function calculateTax() {
+    let totalIncome = parseFloat(document.getElementById('totalIncome').value) || 0;
+    let otIncome = parseFloat(document.getElementById('otIncome').value) || 0;
+    let otherExemptIncome = parseFloat(document.getElementById('otherExemptIncome').value) || 0;
+
+    if (totalIncome < baseSalaryVal) {
+        alert("ລາຍຮັບທັງໝົດຕ້ອງບໍ່ໜ້ອຍກວ່າເງິນເດືອນພື້ນຖານ");
+        return;
+    }
+
+    // 1. ຄຳນວນປະກັນສັງຄົມ (SSO) 5.5% ຈາກເງິນເດືອນພື້ນຖານ (ເພດານບໍ່ເກີນ 4,500,000 ກີບ)
+    let ssoBase = Math.min(baseSalaryVal, 4500000);
+    let sso = ssoBase * 0.055;
+
+    // 2. สรุปรายได้ที่ยกเว้นภาษี
+    let exemptIncome = otherExemptIncome;
+    if (baseSalaryVal <= 3000000) {
+        exemptIncome += otIncome; // เพิ่ม OT เฉพาะกรณีเงินเดือน ≤ 3 ล้าน
+    }
+
+    // 3. ฐานเงินได้คำนวณภาษี = รายได้ทั้งหมด - SSO - รายได้ที่ยกเว้นภาษี
+    let taxableIncome = totalIncome - sso - exemptIncome;
+    if (taxableIncome < 0) taxableIncome = 0;
+
+    // 4. คำนวณภาษีเงินได้แบบก้าวหน้า (Monthly PIT)
+    let tax = 0;
+    let tempIncome = taxableIncome;
+
+    if (tempIncome > 65000000) {
+        tax += (tempIncome - 65000000) * 0.25;
+        tempIncome = 65000000;
+    }
+    if (tempIncome > 25000000) {
+        tax += (tempIncome - 25000000) * 0.20;
+        tempIncome = 25000000;
+    }
+    if (tempIncome > 15000000) {
+        tax += (tempIncome - 15000000) * 0.15;
+        tempIncome = 15000000;
+    }
+    if (tempIncome > 5000000) {
+        tax += (tempIncome - 5000000) * 0.10;
+        tempIncome = 5000000;
+    }
+    if (tempIncome > 2500000) {
+        tax += (tempIncome - 2500000) * 0.05;
+        tempIncome = 2500000;
+    }
+
+    // 5. รายได้สุทธิที่ได้รับจริง
+    let netIncome = totalIncome - sso - tax;
+
+    // แสดงผลลัพธ์
+    document.getElementById('resTotalIncome').innerText = Math.round(totalIncome).toLocaleString();
+    document.getElementById('resSso').innerText = Math.round(sso).toLocaleString();
+    document.getElementById('resTotalExempt').innerText = Math.round(exemptIncome).toLocaleString();
+    document.getElementById('resTaxableBase').innerText = Math.round(taxableIncome).toLocaleString();
+    document.getElementById('resTax').innerText = Math.round(tax).toLocaleString();
+    document.getElementById('resNet').innerText = Math.round(netIncome).toLocaleString();
+    
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
