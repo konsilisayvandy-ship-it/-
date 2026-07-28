@@ -21,6 +21,20 @@
         .result-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
         .result-item.highlight { font-weight: bold; font-size: 16px; color: #28a745; border-top: 2px solid #28a745; padding-top: 10px; margin-top: 10px; }
         .alert-info { background-color: #e3f2fd; color: #0d47a1; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border-left: 4px solid #1e88e5; }
+        
+        /* สไตล์สำหรับกล่องแสดงเงินเดือนพื้นฐานในขั้นตอนที่ 2 */
+        .base-salary-display {
+            background-color: #f1f8ff;
+            border: 1px solid #c8e1ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .base-salary-display span { font-size: 14px; color: #0366d6; font-weight: bold; }
+        .base-salary-display strong { font-size: 18px; color: #0056b3; }
     </style>
 </head>
 <body>
@@ -42,6 +56,12 @@
     <div id="step2" style="display: none;">
         <span class="badge-step">ຂັ້ນທີ 2/2: ຂໍ້ມູນລາຍຮັບຕ່າງໆ</span>
         
+        <!-- แสดงข้อมูลเงินเดือนพื้นฐานจากสเต็ป 1 -->
+        <div class="base-salary-display">
+            <span>ເງິນເດືອນພື້ນຖານ (ຂັ້ນຕອນ 1):</span>
+            <span><strong id="showBaseSalary">0</strong> ກີບ</span>
+        </div>
+
         <div id="step2Info" class="alert-info"></div>
 
         <div class="form-group">
@@ -103,6 +123,9 @@ function goToStep2() {
         alert("ກາລຸນາໃສ່ເງິນເດືອນພື້ນຖານໃຫ້ຖືກຕ້ອງ");
         return;
     }
+
+    // แสดงผลเงินเดือนพื้นฐานสเต็ป 1 บนสเต็ป 2
+    document.getElementById('showBaseSalary').innerText = Math.round(baseSalaryVal).toLocaleString();
 
     const groupOt = document.getElementById('groupOt');
     const step2Info = document.getElementById('step2Info');
