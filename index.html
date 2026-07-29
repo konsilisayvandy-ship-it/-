@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ຄຳນວນອາກອນ ແລະ ປະກັນສັງຄົມໃນ 2 ຂັ້ນຕອນ</title>
+    <title>ຄຳນວນອາກອນ ແລະ ປະກັນສັງຄົມ (ອັບເດດຂໍ້ມູນຫຼ້າສຸດ 29/7/2026)</title>
     <style>
         * { box-sizing: border-box; font-family: 'Phetsarath OT', 'Kanit', sans-serif, system-ui; }
         body { background-color: #f4f6f9; display: flex; justify-content: center; padding: 20px; margin: 0; }
@@ -12,7 +12,10 @@
         .badge-step { background: #eef2f7; color: #0056b3; font-size: 13px; font-weight: bold; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 15px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; font-size: 14px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; background-color: #fff; }
+        .radio-group { display: flex; gap: 15px; margin-top: 5px; }
+        .radio-option { display: flex; align-items: center; gap: 6px; font-weight: normal; font-size: 14px; cursor: pointer; }
+        .radio-option input { width: auto; cursor: pointer; }
         button { width: 100%; padding: 12px; background-color: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         button:hover { background-color: #004085; }
         .btn-secondary { background-color: #6c757d; margin-top: 5px; }
@@ -21,20 +24,9 @@
         .result-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
         .result-item.highlight { font-weight: bold; font-size: 16px; color: #28a745; border-top: 2px solid #28a745; padding-top: 10px; margin-top: 10px; }
         .alert-info { background-color: #e3f2fd; color: #0d47a1; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border-left: 4px solid #1e88e5; }
-        
-        /* สไตล์สำหรับกล่องแสดงเงินเดือนพื้นฐานในขั้นตอนที่ 2 */
-        .base-salary-display {
-            background-color: #f1f8ff;
-            border: 1px solid #c8e1ff;
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .base-salary-display span { font-size: 14px; color: #0366d6; font-weight: bold; }
-        .base-salary-display strong { font-size: 18px; color: #0056b3; }
+        .summary-display { background-color: #f1f3f5; padding: 10px 12px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; border: 1px solid #e9ecef; color: #2c3e50; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .summary-item:last-child { margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -44,11 +36,42 @@
 
     <!-- STEP 1 -->
     <div id="step1">
-        <span class="badge-step">ຂັ້ນຕອນທີ 1/2: ລະບຸເງິນເດືອນພື້ນຖານ</span>
+        <span class="badge-step">ຂັ້ນຕອນທີ 1/2: ເງື່ອນໄຂເງິນເດືອນ ແລະ ປະກັນສັງຄົມ</span>
+        
+        <!-- 1. เงื่อนไขเงินเดือนพื้นฐาน -->
         <div class="form-group">
-            <label>ເງິນເດືອນພື້ນຖານເດືອນນີ້:</label>
-            <input type="number" id="baseSalary" placeholder="ຕົວຢ່າງ 2,500,000" min="0">
+            <label>1. ເງິນເດືອນພື້ນຖານຂອງທ່ານ:</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="salaryRange" value="lte3m" checked>
+                    ບໍ່ເກີນ 3,000,000 ກີບ
+                </label>
+            </div>
+            <div class="radio-group" style="margin-top: 8px;">
+                <label class="radio-option">
+                    <input type="radio" name="salaryRange" value="gt3m">
+                    ຫຼາຍກວ່າ 3,000,000 ກີບ
+                </label>
+            </div>
         </div>
+
+        <!-- 2. เงื่อนไขการจ่ายประกันสังคม -->
+        <div class="form-group" style="margin-top: 20px;">
+            <label>2. ການຊຳລະປະກັນສັງຄົມ (SSO):</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="hasSso" value="yes" checked>
+                    ມີການຈ່າຍປະກັນສັງຄົມ (5.5%)
+                </label>
+            </div>
+            <div class="radio-group" style="margin-top: 8px;">
+                <label class="radio-option">
+                    <input type="radio" name="hasSso" value="no">
+                    ບໍ່ມີການຈ່າຍປະກັນສັງຄົມ
+                </label>
+            </div>
+        </div>
+
         <button onclick="goToStep2()">ຖັດໄປ (ຂັ້ນຕອນທີ 2)</button>
     </div>
 
@@ -56,10 +79,16 @@
     <div id="step2" style="display: none;">
         <span class="badge-step">ຂັ້ນທີ 2/2: ຂໍ້ມູນລາຍຮັບຕ່າງໆ</span>
         
-        <!-- แสดงข้อมูลเงินเดือนพื้นฐานจากสเต็ป 1 -->
-        <div class="base-salary-display">
-            <span>ເງິນເດືອນພື້ນຖານ (ຂັ້ນຕອນ 1):</span>
-            <span><strong id="showBaseSalary">0</strong> ກີບ</span>
+        <!-- กล่องสรุปเงื่อนไขจากสเต็ป 1 -->
+        <div class="summary-display">
+            <div class="summary-item">
+                <span>ເກນເງິນເດືອນພື້ນຖານ:</span>
+                <strong id="showSalaryRange">-</strong>
+            </div>
+            <div class="summary-item">
+                <span>ການຈ່າຍປະກັນສັງຄົມ:</span>
+                <strong id="showSsoStatus">-</strong>
+            </div>
         </div>
 
         <div id="step2Info" class="alert-info"></div>
@@ -91,7 +120,7 @@
             <span><strong id="resTotalIncome">0</strong> ກີບ</span>
         </div>
         <div class="result-item" style="color: #d9534f;">
-            <span>ຫັກປະກັນສັງຄົມ (5.5% ຈາກຖານເງິນເດືອນ):</span>
+            <span>ຫັກປະກັນສັງຄົມ:</span>
             <span><strong id="resSso">0</strong> ກີບ</span>
         </div>
         <div class="result-item" style="color: #6c757d;">
@@ -114,30 +143,32 @@
 </div>
 
 <script>
-let baseSalaryVal = 0;
+let isSalaryLte3m = true;
+let hasSso = true;
 
 function goToStep2() {
-    baseSalaryVal = parseFloat(document.getElementById('baseSalary').value) || 0;
+    // อ่านค่าตัวเลือกจาก สเต็ปที่ 1
+    const salaryRangeVal = document.querySelector('input[name="salaryRange"]:checked').value;
+    const hasSsoVal = document.querySelector('input[name="hasSso"]:checked').value;
 
-    if (baseSalaryVal <= 0) {
-        alert("ກາລຸນາໃສ່ເງິນເດືອນພື້ນຖານໃຫ້ຖືກຕ້ອງ");
-        return;
-    }
+    isSalaryLte3m = (salaryRangeVal === 'lte3m');
+    hasSso = (hasSsoVal === 'yes');
 
-    // แสดงผลเงินเดือนพื้นฐานสเต็ป 1 บนสเต็ป 2
-    document.getElementById('showBaseSalary').innerText = Math.round(baseSalaryVal).toLocaleString();
+    // แสดงสรุปเงื่อนไขบน สเต็ปที่ 2
+    document.getElementById('showSalaryRange').innerText = isSalaryLte3m ? "ບໍ່ເກີນ 3,000,000 ກີບ" : "ຫຼາຍກວ່າ 3,000,000 ກີບ";
+    document.getElementById('showSsoStatus').innerText = hasSso ? "ມີການຈ່າຍປະກັນສັງຄົມ (5.5%)" : "ບໍ່ມີການຈ່າຍປະກັນສັງຄົມ";
 
     const groupOt = document.getElementById('groupOt');
     const step2Info = document.getElementById('step2Info');
     const lblExemptOther = document.getElementById('lblExemptOther');
 
-    if (baseSalaryVal <= 3000000) {
-        // ແບບທີ 1: ເງິນເດືອນພື້ນຖານບໍ່ເກີນ 3 ລ້ານກີບ -> ເງິນລ່ວງເວລາ (OT) ໄດ້ຮັບຍົກເວັ້ນອາກອນ
+    if (isSalaryLte3m) {
+        // เงื่อนไข <= 3 ล้านกีบ: ยกเว้นภาษี OT
         groupOt.style.display = 'block';
         lblExemptOther.innerText = '3. ລາຍຮັບອື່ນໆທີ່ຖືກຍົກເວັ້ນອາກອນ (ຖ້າມີ):';
-        step2Info.innerText = "ເງິນເດືອນພື້ນຖານບໍ່ເກີນ 3,000,000 ກິບ: ເງິນລ່ວງເວລາ (OT) ໄດ້ຮັບຍົກເວັ້ນອາກອນ";
+        step2Info.innerText = "ເງິນເດືອນພື້ນຖານບໍ່ເກີນ 3,000,000 ກີບ: ເງິນລ່ວງເວລາ (OT) ໄດ້ຮັບການຍົກເວັ້ນອາກອນ";
     } else {
-        // ແບບທີ 2: ເງິນເດືອນພື້ນຖານຫຼາຍກວ່າ 3 ລ້ານກີບ -> ເງິນລ່ວງເວລາ (OT) ຄຳນວນອາກອນປົກກະຕິ (ເຊື່ອງຊ່ອງ OT)
+        // เงื่อนไข > 3 ล้านกีบ: ไม่ยกเว้นภาษี OT
         groupOt.style.display = 'none';
         document.getElementById('otIncome').value = 0;
         lblExemptOther.innerText = '2. ລາຍຮັບອື່ນໆທີ່ຖືກຍົກເວັ້ນອາກອນ (ຖ້າມີ):';
@@ -159,22 +190,28 @@ function calculateTax() {
     let otIncome = parseFloat(document.getElementById('otIncome').value) || 0;
     let otherExemptIncome = parseFloat(document.getElementById('otherExemptIncome').value) || 0;
 
-    if (totalIncome < baseSalaryVal) {
-        alert("ລາຍຮັບທັງໝົດຕ້ອງບໍ່ໜ້ອຍກວ່າເງິນເດືອນພື້ນຖານ");
+    if (totalIncome <= 0) {
+        alert("ກາລຸນາໃສ່ລາຍຮັບທັງໝົດໃຫ້ຖືກຕ້ອງ");
         return;
     }
 
-    // 1. ຄຳນວນປະກັນສັງຄົມ (SSO) 5.5% ຈາກເງິນເດືອນພື້ນຖານ (ເພດານບໍ່ເກີນ 4,500,000 ກີບ)
-    let ssoBase = Math.min(baseSalaryVal, 4500000);
-    let sso = ssoBase * 0.055;
-
-    // 2. สรุปรายได้ที่ยกเว้นภาษี
-    let exemptIncome = otherExemptIncome;
-    if (baseSalaryVal <= 3000000) {
-        exemptIncome += otIncome; // เพิ่ม OT เฉพาะกรณีเงินเดือน ≤ 3 ล้าน
+    // 1. คำนวณประกันสังคม (SSO) 
+    // หากเลือกมีประกันสังคม จะคำนวณ 5.5% (โดยสมมติฐานเพดานเงินเดือนพื้นฐานไม่เกิน 4.5 ล้านกีบ)
+    let sso = 0;
+    if (hasSso) {
+        // หากเงินเดือน <= 3 ล้าน ให้คิดจาก 3 ล้าน / หาก > 3 ล้าน ให้คิดฐานเพดานสูงสุด 4.5 ล้าน
+        let ssoBase = isSalaryLte3m ? 3000000 : 4500000;
+        ssoBase = Math.min(totalIncome, ssoBase);
+        sso = ssoBase * 0.055;
     }
 
-    // 3. ฐานเงินได้คำนวณภาษี = รายได้ทั้งหมด - SSO - รายได้ที่ยกเว้นภาษี
+    // 2. สรุปรายได้ที่ได้รับการยกเว้นภาษี
+    let exemptIncome = otherExemptIncome;
+    if (isSalaryLte3m) {
+        exemptIncome += otIncome; // เพิ่ม OT เฉพาะกรณีเงินเดือน <= 3 ล้าน
+    }
+
+    // 3. ฐานเงินได้คำนวณภาษี = รายได้ทั้งหมด - ประกันสังคม - รายได้ยกเว้นภาษี
     let taxableIncome = totalIncome - sso - exemptIncome;
     if (taxableIncome < 0) taxableIncome = 0;
 
@@ -203,7 +240,7 @@ function calculateTax() {
         tempIncome = 2500000;
     }
 
-    // 5. รายได้สุทธิที่ได้รับจริง
+    // 5. รายได้สุทธิรับจริง
     let netIncome = totalIncome - sso - tax;
 
     // แสดงผลลัพธ์
